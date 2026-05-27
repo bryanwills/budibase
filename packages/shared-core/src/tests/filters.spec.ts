@@ -153,4 +153,36 @@ describe("filter to query conversion", () => {
       },
     })
   })
+
+  it("ignores incomplete numeric filters", () => {
+    const filter: UISearchFilter = {
+      logicalOperator: UILogicalOperator.ALL,
+      groups: [
+        {
+          logicalOperator: UILogicalOperator.ALL,
+          filters: [
+            {
+              field: "amount",
+              type: FieldType.NUMBER,
+              operator: BasicOperator.LT,
+              value: "",
+            },
+          ],
+        },
+      ],
+    }
+    const query = buildQuery(filter)
+    expect(query).toEqual({
+      onEmptyFilter: "all",
+      $and: {
+        conditions: [
+          {
+            $and: {
+              conditions: [],
+            },
+          },
+        ],
+      },
+    })
+  })
 })

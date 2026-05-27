@@ -357,6 +357,13 @@ function buildCondition(filter?: SearchFilter): SearchFilters | undefined {
           value = parseFloat(value)
         }
       }
+      if (
+        !isHbs &&
+        ((typeof value === "number" && Number.isNaN(value)) ||
+          (Array.isArray(value) && value.some(item => Number.isNaN(item))))
+      ) {
+        return
+      }
       break
     case FieldType.BOOLEAN:
       value = `${value}`.toLowerCase() === "true"
